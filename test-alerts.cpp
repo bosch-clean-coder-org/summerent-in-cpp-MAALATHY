@@ -35,18 +35,18 @@ void sendToEmail(BreachType breachType) {
 TEST_CASE("Checks and alerts the target"){
   SECTION("Sends alert to Controller if alert target is Controller"){    
     BatteryCharacter batteryChar;
-    batteryChar.CoolingType = PASSIVE_COOLING;
-    checkAndAlert(TO_CONTROLLER, batteryChar.CoolingType, 35.0);
+    batteryChar.coolingType = PASSIVE_COOLING;
+    checkAndAlert(TO_CONTROLLER, batteryChar.coolingType, 35.0);
     REQUIRE(isSendToControllerCalled);
     REQUIRE_FALSE(isSendToEmailCalled);
     REQUIRE(capturedBreachType == NORMAL);
 
-    checkAndAlert(TO_CONTROLLER, batteryChar.CoolingType, 40.0);
+    checkAndAlert(TO_CONTROLLER, batteryChar.coolingType, 40.0);
     REQUIRE(isSendToControllerCalled);
     REQUIRE_FALSE(isSendToEmailCalled);
     REQUIRE(capturedBreachType == TOO_HIGH);
 
-    checkAndAlert(TO_CONTROLLER, batteryChar.CoolingType, -5.0);
+    checkAndAlert(TO_CONTROLLER, batteryChar.coolingType, -5.0);
     REQUIRE(isSendToControllerCalled);
     REQUIRE_FALSE(isSendToEmailCalled);
     REQUIRE(capturedBreachType == TOO_LOW);
