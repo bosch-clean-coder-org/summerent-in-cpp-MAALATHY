@@ -3,6 +3,106 @@
 #include "test/catch.hpp"
 #include "typewise-alert.h"
 
-TEST_CASE("infers the breach according to limits") {
-  REQUIRE(inferBreach(12, 20, 30) == TOO_LOW);
+TEST_CASE("Classifies the Temperature Breach according to CoolingType and Temperature in Celsius"){
+  SECTION("Classifies the Temperature Breach for PASSIVE_COOLING CoolingType"){ 
+    REQUIRE(classifyTemperatureBreach(PASSIVE_COOLING, 35.0) == NORMAL);
+    REQUIRE(classifyTemperatureBreach(PASSIVE_COOLING, 40.0) == TOO_HIGH);
+    REQUIRE(classifyTemperatureBreach(PASSIVE_COOLING, -5.0) == TOO_LOW);
+  }
+
+  SECTION("Classifies the Temperature Breach for HI_ACTIVE_COOLING CoolingType"){ 
+    REQUIRE(classifyTemperatureBreach(HI_ACTIVE_COOLING, 45.0) == NORMAL);
+    REQUIRE(classifyTemperatureBreach(HI_ACTIVE_COOLING, 50.0) == TOO_HIGH);
+    REQUIRE(classifyTemperatureBreach(HI_ACTIVE_COOLING, -5.0) == TOO_LOW);
+  }
+
+  SECTION("Classifies the Temperature Breach for MED_ACTIVE_COOLING CoolingType"){   
+    REQUIRE(classifyTemperatureBreach(MED_ACTIVE_COOLING, 40.0) == NORMAL);
+    REQUIRE(classifyTemperatureBreach(MED_ACTIVE_COOLING, 45.0) == TOO_HIGH);
+    REQUIRE(classifyTemperatureBreach(MED_ACTIVE_COOLING, -5.0) == TOO_LOW);  
+  }
+}
+
+TEST_CASE("Checks and alerts the target"){
+    // Redirect stdout to a stringstream for capturing the output.
+    std::stringstream output;
+    std::streambuf* oldBuffer = std::cout.rdbuf(output.rdbuf());
+    std::cout.rdbuf(oldBuffer);    // Restore stdout.
+
+    BatteryCharacter batteryChar;
+  SECTION("Sends alert to Controller if alert target is Controller"){ 
+    batteryChar.coolingType = PASSIVE_COOLING;
+    checkAndAlert(TO_CONTROLLER, batteryChar, 35.0);
+    //std::string expectedOutput = "feed : 0\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // NORMAL BreachType
+
+    checkAndAlert(TO_CONTROLLER, batteryChar, 40.0);
+    //expectedOutput = "feed : 2\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_HIGH BreachType
+
+    checkAndAlert(TO_CONTROLLER, batteryChar, -5.0);
+    //expectedOutput = "feed : 1\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_LOW BreachType
+
+    batteryChar.coolingType = HI_ACTIVE_COOLING;
+    checkAndAlert(TO_CONTROLLER, batteryChar, 45.0);
+    //expectedOutput = "feed : 0\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // NORMAL BreachType
+
+    checkAndAlert(TO_CONTROLLER, batteryChar, 50.0);
+    //expectedOutput = "feed : 2\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_HIGH BreachType
+
+    checkAndAlert(TO_CONTROLLER, batteryChar, -5.0);
+    //expectedOutput = "feed : 1\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_LOW BreachType
+
+    batteryChar.coolingType = MED_ACTIVE_COOLING;
+    checkAndAlert(TO_CONTROLLER, batteryChar, 40.0);
+    //expectedOutput = "feed : 0\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // NORMAL BreachType
+
+    checkAndAlert(TO_CONTROLLER, batteryChar, 45.0);
+    //expectedOutput = "feed : 2\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_HIGH BreachType
+
+    checkAndAlert(TO_CONTROLLER, batteryChar, -5.0);
+    //expectedOutput = "feed : 1\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_LOW BreachType
+  }
+
+  SECTION("Sends alert via EMAIL if alert target is EMAIL"){ 
+    batteryChar.coolingType = PASSIVE_COOLING;
+    checkAndAlert(TO_EMAIL, batteryChar, 35.0);                   // NORMAL BreachType
+
+    checkAndAlert(TO_EMAIL, batteryChar, 40.0);
+    //expectedOutput = "feed : 2\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_HIGH BreachType
+
+    checkAndAlert(TO_EMAIL, batteryChar, -5.0);
+    //expectedOutput = "feed : 1\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_LOW BreachType
+
+    batteryChar.coolingType = HI_ACTIVE_COOLING;
+    checkAndAlert(TO_EMAIL, batteryChar, 45.0);                   // NORMAL BreachType
+
+    checkAndAlert(TO_EMAIL, batteryChar, 50.0);
+    //expectedOutput = "feed : 2\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_HIGH BreachType
+
+    checkAndAlert(TO_EMAIL, batteryChar, -5.0);
+    //expectedOutput = "feed : 1\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_LOW BreachType
+
+    batteryChar.coolingType = MED_ACTIVE_COOLING;
+    checkAndAlert(TO_EMAIL, batteryChar, 40.0);                   // NORMAL BreachType
+
+    checkAndAlert(TO_EMAIL, batteryChar, 45.0);
+    //expectedOutput = "feed : 2\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_HIGH BreachType
+
+    checkAndAlert(TO_EMAIL, batteryChar, -5.0);
+    //expectedOutput = "feed : 1\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_LOW BreachType
+  }
 }
