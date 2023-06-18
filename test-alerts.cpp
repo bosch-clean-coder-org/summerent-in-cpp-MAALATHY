@@ -3,18 +3,24 @@
 #include "test/catch.hpp"
 #include "typewise-alert.h"
 
-TEST_CASE("classifies the Temperature Breach according to CoolingType and Temperature in Celsius"){
-  REQUIRE(classifyTemperatureBreach(PASSIVE_COOLING, 35.0) == NORMAL);
-  REQUIRE(classifyTemperatureBreach(PASSIVE_COOLING, 40.0) == TOO_HIGH);
-  REQUIRE(classifyTemperatureBreach(PASSIVE_COOLING, -5.0) == TOO_LOW);
-  
-  REQUIRE(classifyTemperatureBreach(HI_ACTIVE_COOLING, 45.0) == NORMAL);
-  REQUIRE(classifyTemperatureBreach(HI_ACTIVE_COOLING, 50.0) == TOO_HIGH);
-  REQUIRE(classifyTemperatureBreach(HI_ACTIVE_COOLING, -5.0) == TOO_LOW);
+TEST_CASE("Classifies the Temperature Breach according to CoolingType and Temperature in Celsius"){
+  SECTION("Classifies the Temperature Breach for PASSIVE_COOLING CoolingType"){ 
+    REQUIRE(classifyTemperatureBreach(PASSIVE_COOLING, 35.0) == NORMAL);
+    REQUIRE(classifyTemperatureBreach(PASSIVE_COOLING, 40.0) == TOO_HIGH);
+    REQUIRE(classifyTemperatureBreach(PASSIVE_COOLING, -5.0) == TOO_LOW);
+  }
 
-  REQUIRE(classifyTemperatureBreach(MED_ACTIVE_COOLING, 40.0) == NORMAL);
-  REQUIRE(classifyTemperatureBreach(MED_ACTIVE_COOLING, 45.0) == TOO_HIGH);
-  REQUIRE(classifyTemperatureBreach(MED_ACTIVE_COOLING, -5.0) == TOO_LOW);  
+  SECTION("Classifies the Temperature Breach for HI_ACTIVE_COOLING CoolingType"){ 
+    REQUIRE(classifyTemperatureBreach(HI_ACTIVE_COOLING, 45.0) == NORMAL);
+    REQUIRE(classifyTemperatureBreach(HI_ACTIVE_COOLING, 50.0) == TOO_HIGH);
+    REQUIRE(classifyTemperatureBreach(HI_ACTIVE_COOLING, -5.0) == TOO_LOW);
+  }
+
+  SECTION("Classifies the Temperature Breach for MED_ACTIVE_COOLING CoolingType"){   
+    REQUIRE(classifyTemperatureBreach(MED_ACTIVE_COOLING, 40.0) == NORMAL);
+    REQUIRE(classifyTemperatureBreach(MED_ACTIVE_COOLING, 45.0) == TOO_HIGH);
+    REQUIRE(classifyTemperatureBreach(MED_ACTIVE_COOLING, -5.0) == TOO_LOW);  
+  }
 }
 
 TEST_CASE("Checks and alerts the target"){
