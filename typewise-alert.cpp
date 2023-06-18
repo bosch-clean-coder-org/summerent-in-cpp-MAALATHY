@@ -39,7 +39,7 @@ void sendToController(BreachType breachType) {
 }
 
 void sendValuesToController(unsigned short header, BreachType breachType) {
-  printf("%x : %x\n", header, breachType);
+  printf("%x : %x", header, breachType);
 }
 
 void sendToEmail(BreachType breachType) {
