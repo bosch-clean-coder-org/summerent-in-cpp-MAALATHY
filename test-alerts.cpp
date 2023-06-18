@@ -27,8 +27,8 @@ TEST_CASE("Checks and alerts the target"){
     BatteryCharacter batteryChar;
     batteryChar.coolingType = PASSIVE_COOLING;
     checkAndAlert(TO_CONTROLLER, batteryChar, 35.0);
-    //std::string expectedOutput = "feed : 0\n";
-    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // NORMAL BreachType
+    std::string expectedOutput = "feed\n";
+    REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // NORMAL BreachType
 
     checkAndAlert(TO_CONTROLLER, batteryChar, 40.0);
     //expectedOutput = "feed : 2\n";
@@ -73,9 +73,7 @@ TEST_CASE("Checks and alerts the target"){
 
     BatteryCharacter batteryChar;
     batteryChar.coolingType = PASSIVE_COOLING;
-    checkAndAlert(TO_EMAIL, batteryChar, 35.0);
-    //std::string expectedOutput = "feed : 0\n";
-    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // NORMAL BreachType
+    checkAndAlert(TO_EMAIL, batteryChar, 35.0);                   // NORMAL BreachType
 
     checkAndAlert(TO_EMAIL, batteryChar, 40.0);
     //expectedOutput = "feed : 2\n";
@@ -86,9 +84,7 @@ TEST_CASE("Checks and alerts the target"){
     //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_LOW BreachType
 
     batteryChar.coolingType = HI_ACTIVE_COOLING;
-    checkAndAlert(TO_EMAIL, batteryChar, 45.0);
-    //expectedOutput = "feed : 0\n";
-    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // NORMAL BreachType
+    checkAndAlert(TO_EMAIL, batteryChar, 45.0);                   // NORMAL BreachType
 
     checkAndAlert(TO_EMAIL, batteryChar, 50.0);
     //expectedOutput = "feed : 2\n";
@@ -99,9 +95,7 @@ TEST_CASE("Checks and alerts the target"){
     //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_LOW BreachType
 
     batteryChar.coolingType = MED_ACTIVE_COOLING;
-    checkAndAlert(TO_EMAIL, batteryChar, 40.0);
-    //expectedOutput = "feed : 0\n";
-    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // NORMAL BreachType
+    checkAndAlert(TO_EMAIL, batteryChar, 40.0);                   // NORMAL BreachType
 
     checkAndAlert(TO_EMAIL, batteryChar, 45.0);
     //expectedOutput = "feed : 2\n";
