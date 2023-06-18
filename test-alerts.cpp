@@ -27,7 +27,8 @@ TEST_CASE("Checks and alerts the target"){
     BatteryCharacter batteryChar;
     batteryChar.coolingType = PASSIVE_COOLING;
     checkAndAlert(TO_CONTROLLER, batteryChar, 35.0);
-    REQUIRE(output.str() == "feed : 0\n");           // NORMAL BreachType
+    REQUIRE(output.str() == "feed : 0
+      ");           // NORMAL BreachType
 
     checkAndAlert(TO_CONTROLLER, batteryChar, 40.0);
     REQUIRE(output.str() == "feed : 2\n");           // TOO_HIGH BreachType
