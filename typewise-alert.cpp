@@ -2,16 +2,13 @@
 #include <stdio.h>
 
 BreachType inferBreach(double value, double lowerLimit, double upperLimit) {
-  BreachType l_breachType = NORMAL;
   if(value < lowerLimit) {
-    l_breachType = TOO_LOW;
+    return TOO_LOW;
   }
-  else if(value > upperLimit) {
-    l_breachType = TOO_HIGH;
+  if(value > upperLimit) {
+    return TOO_HIGH;
   }
-  else{
-  }
-  return l_breachType;
+  return NORMAL;
 }
 
 BreachType classifyTemperatureBreach(
@@ -47,7 +44,7 @@ void checkAndAlert(
   }
 }
 
-void sendToController(BreachType breachType) {
+inline void sendToController(BreachType breachType) {
   const unsigned short header = 0xfeed;
   printf("%x : %x\n", header, breachType);
 }
