@@ -19,7 +19,37 @@ TEST_CASE("classifies the Temperature Breach according to CoolingType and Temper
 
 TEST_CASE("Checks and alerts the target"){
   SECTION("Sends alert to Controller if alert target is Controller"){
-    checkAndAlert(TO_CONTROLLER, PASSIVE_COOLING, 35.0);
-    REQUIRE(sendToController(NORMAL));
+
+    // Mock functions to capture the calls
+    bool isSendToControllerCalled = false;
+    bool isSendToEmailCalled = false;
+    BreachType capturedBreachType;
+    
+    void sendToController(BreachType breachType) {
+      isSendToControllerCalled = true;
+      capturedBreachType = breachType;
+    }
+
+    void sendToEmail(BreachType breachType) {
+      isSendToEmailCalled = true;
+      capturedBreachType = breachType;
+    }
+    
+    BatteryCharacter batteryChar;
+    batteryChar.coolingType = PASSIVE_COOLING;
+    checkAndAlert(TO_CONTROLLER, batteryChar.coolingType, 35.0);
+    REQUIRE(isSendToControllerCalled);
+    REQUIRE_FALSE(isSendToEmailCalled);
+    REQUIRE(capturedBreachType == NORMAL);
+
+    checkAndAlert(TO_CONTROLLER, batteryChar.coolingType, 40.0);
+    REQUIRE(isSendToControllerCalled);
+    REQUIRE_FALSE(isSendToEmailCalled);
+    REQUIRE(capturedBreachType == TOO_HIGH);
+
+    checkAndAlert(TO_CONTROLLER, batteryChar.coolingType, -5.0);
+    REQUIRE(isSendToControllerCalled);
+    REQUIRE_FALSE(isSendToEmailCalled);
+    REQUIRE(capturedBreachType == TOO_LOW);
   }
 }
