@@ -4,18 +4,18 @@
 BreachType classifyTemperatureBreach(
     CoolingType coolingType, double temperatureInC) {
 
-  private static final int temperatureLimits[2] = {
+const int temperatureLimits[3] = {
   35,   // PASSIVE_COOLING
   45,   // HI_ACTIVE_COOLING
   40    // DEFAULT_COOLING
 };
-  int coolingTypeIndex = coolingType.ordinal();
+  int coolingTypeIndex = coolingType;
   int lowerLimit = 0;
   int upperLimit = temperatureLimits[coolingTypeIndex];
 
-    return (value < lowerLimit) ? BreachType.TOO_LOW :
-         (value > upperLimit) ? BreachType.TOO_HIGH :
-                               BreachType.NORMAL;
+    return (temperatureInC < lowerLimit) ? TOO_LOW :
+         (temperatureInC > upperLimit) ? TOO_HIGH :
+                               NORMAL;
 }
 
 void checkAndAlert(
@@ -46,13 +46,13 @@ void sendToEmail(BreachType breachType) {
   const char* recepient = "a.b@c.com";
   const char* message;
   if(breachType == TOO_LOW){
-    message = Hi, the temperature is too low;
+    message = "Hi, the temperature is too low";
   }
   else if(breachType == TOO_HIGH){
-    message = Hi, the temperature is too high;
+    message = "Hi, the temperature is too high";
   }
   else{
     return;
   }
-  printf("To: %s\n%s\n", recipient, message);
+  printf("To: %s\n%s\n", recepient, message);
 }
