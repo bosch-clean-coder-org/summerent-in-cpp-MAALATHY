@@ -12,7 +12,7 @@ TEST_CASE("classifies the Temperature Breach according to CoolingType and Temper
   REQUIRE(classifyTemperatureBreach(HI_ACTIVE_COOLING, 50) == TOO_HIGH);
   REQUIRE(classifyTemperatureBreach(HI_ACTIVE_COOLING, -5) == TOO_LOW);
 
-  REQUIRE(classifyTemperatureBreach(DEFAULT_COOLING, 40) == NORMAL);
-  REQUIRE(classifyTemperatureBreach(DEFAULT_COOLING, 45) == TOO_HIGH);
-  REQUIRE(classifyTemperatureBreach(DEFAULT_COOLING, -5) == TOO_LOW);  
+  REQUIRE(classifyTemperatureBreach(MED_ACTIVE_COOLING, 40) == NORMAL);
+  REQUIRE(classifyTemperatureBreach(MED_ACTIVE_COOLING, 45) == TOO_HIGH);
+  REQUIRE(classifyTemperatureBreach(MED_ACTIVE_COOLING, -5) == TOO_LOW);  
 }
