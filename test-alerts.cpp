@@ -64,4 +64,51 @@ TEST_CASE("Checks and alerts the target"){
     //expectedOutput = "feed : 1\n";
     //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_LOW BreachType
   }
+
+  SECTION("Sends alert via EMAIL if alert target is EMAIL"){    
+    // Redirect stdout to a stringstream for capturing the output.
+    std::stringstream output;
+    std::streambuf* oldBuffer = std::cout.rdbuf(output.rdbuf());
+    std::cout.rdbuf(oldBuffer);    // Restore stdout.
+
+    BatteryCharacter batteryChar;
+    batteryChar.coolingType = PASSIVE_COOLING;
+    checkAndAlert(TO_EMAIL, batteryChar, 35.0);
+    //std::string expectedOutput = "feed : 0\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // NORMAL BreachType
+
+    checkAndAlert(TO_EMAIL, batteryChar, 40.0);
+    //expectedOutput = "feed : 2\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_HIGH BreachType
+
+    checkAndAlert(TO_EMAIL, batteryChar, -5.0);
+    //expectedOutput = "feed : 1\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_LOW BreachType
+
+    batteryChar.coolingType = HI_ACTIVE_COOLING;
+    checkAndAlert(TO_EMAIL, batteryChar, 45.0);
+    //expectedOutput = "feed : 0\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // NORMAL BreachType
+
+    checkAndAlert(TO_EMAIL, batteryChar, 50.0);
+    //expectedOutput = "feed : 2\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_HIGH BreachType
+
+    checkAndAlert(TO_EMAIL, batteryChar, -5.0);
+    //expectedOutput = "feed : 1\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_LOW BreachType
+
+    batteryChar.coolingType = MED_ACTIVE_COOLING;
+    checkAndAlert(TO_EMAIL, batteryChar, 40.0);
+    //expectedOutput = "feed : 0\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // NORMAL BreachType
+
+    checkAndAlert(TO_EMAIL, batteryChar, 45.0);
+    //expectedOutput = "feed : 2\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_HIGH BreachType
+
+    checkAndAlert(TO_EMAIL, batteryChar, -5.0);
+    //expectedOutput = "feed : 1\n";
+    //REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // TOO_LOW BreachType
+  }
 }
