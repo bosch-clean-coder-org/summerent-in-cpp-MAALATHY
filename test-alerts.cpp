@@ -17,70 +17,42 @@ TEST_CASE("classifies the Temperature Breach according to CoolingType and Temper
   REQUIRE(classifyTemperatureBreach(MED_ACTIVE_COOLING, -5.0) == TOO_LOW);  
 }
 
-// Mock functions to capture the calls
-bool isSendToControllerCalled = false;
-bool isSendToEmailCalled = false;
-BreachType capturedBreachType;
-
-void sendToController(BreachType breachType) {
-  isSendToControllerCalled = true;
-  capturedBreachType = breachType;
-}
-
-void sendToEmail(BreachType breachType) {
-  isSendToEmailCalled = true;
-  capturedBreachType = breachType;
-}
-
 TEST_CASE("Checks and alerts the target"){
   SECTION("Sends alert to Controller if alert target is Controller"){    
+    // Redirect stdout to a stringstream for capturing the output.
+    std::stringstream output;
+    std::streambuf* oldBuffer = std::cout.rdbuf(output.rdbuf());
+    std::cout.rdbuf(oldBuffer);    // Restore stdout.
+
     BatteryCharacter batteryChar;
     batteryChar.coolingType = PASSIVE_COOLING;
     checkAndAlert(TO_CONTROLLER, batteryChar, 35.0);
-    REQUIRE(isSendToControllerCalled);
-    REQUIRE_FALSE(isSendToEmailCalled);
-    REQUIRE(capturedBreachType == NORMAL);
+    REQUIRE(output.str() == "feed : 0\n");           // NORMAL BreachType
 
     checkAndAlert(TO_CONTROLLER, batteryChar, 40.0);
-    REQUIRE(isSendToControllerCalled);
-    REQUIRE_FALSE(isSendToEmailCalled);
-    REQUIRE(capturedBreachType == TOO_HIGH);
+    REQUIRE(output.str() == "feed : 2\n");           // TOO_HIGH BreachType
 
     checkAndAlert(TO_CONTROLLER, batteryChar, -5.0);
-    REQUIRE(isSendToControllerCalled);
-    REQUIRE_FALSE(isSendToEmailCalled);
-    REQUIRE(capturedBreachType == TOO_LOW);
+    REQUIRE(output.str() == "feed : 1\n");           // TOO_LOW BreachType
 
     batteryChar.coolingType = HI_ACTIVE_COOLING;
     checkAndAlert(TO_CONTROLLER, batteryChar, 45.0);
-    REQUIRE(isSendToControllerCalled);
-    REQUIRE_FALSE(isSendToEmailCalled);
-    REQUIRE(capturedBreachType == NORMAL);
+    REQUIRE(output.str() == "feed : 0\n");           // NORMAL BreachType
 
     checkAndAlert(TO_CONTROLLER, batteryChar, 50.0);
-    REQUIRE(isSendToControllerCalled);
-    REQUIRE_FALSE(isSendToEmailCalled);
-    REQUIRE(capturedBreachType == TOO_HIGH);
+    REQUIRE(output.str() == "feed : 2\n");           // TOO_HIGH BreachType
 
     checkAndAlert(TO_CONTROLLER, batteryChar, -5.0);
-    REQUIRE(isSendToControllerCalled);
-    REQUIRE_FALSE(isSendToEmailCalled);
-    REQUIRE(capturedBreachType == TOO_LOW);
+    REQUIRE(output.str() == "feed : 1\n");           // TOO_LOW BreachType
 
     batteryChar.coolingType = MED_ACTIVE_COOLING;
     checkAndAlert(TO_CONTROLLER, batteryChar, 40.0);
-    REQUIRE(isSendToControllerCalled);
-    REQUIRE_FALSE(isSendToEmailCalled);
-    REQUIRE(capturedBreachType == NORMAL);
+    REQUIRE(output.str() == "feed : 0\n");           // NORMAL BreachType
 
     checkAndAlert(TO_CONTROLLER, batteryChar, 45.0);
-    REQUIRE(isSendToControllerCalled);
-    REQUIRE_FALSE(isSendToEmailCalled);
-    REQUIRE(capturedBreachType == TOO_HIGH);
+    REQUIRE(output.str() == "feed : 2\n");           // TOO_HIGH BreachType
 
     checkAndAlert(TO_CONTROLLER, batteryChar, -5.0);
-    REQUIRE(isSendToControllerCalled);
-    REQUIRE_FALSE(isSendToEmailCalled);
-    REQUIRE(capturedBreachType == TOO_LOW);
+    REQUIRE(output.str() == "feed : 1\n");           // TOO_LOW BreachType
   }
 }
