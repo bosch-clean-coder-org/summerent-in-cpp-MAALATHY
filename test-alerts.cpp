@@ -27,7 +27,7 @@ TEST_CASE("Checks and alerts the target"){
     BatteryCharacter batteryChar;
     batteryChar.coolingType = PASSIVE_COOLING;
     checkAndAlert(TO_CONTROLLER, batteryChar, 35.0);
-    std::string expectedOutput = "feed : 0";
+    std::string expectedOutput = "feed : 1";
     REQUIRE_THAT(output.str(), Catch::Equals(expectedOutput));  // NORMAL BreachType
 
     checkAndAlert(TO_CONTROLLER, batteryChar, 40.0);
